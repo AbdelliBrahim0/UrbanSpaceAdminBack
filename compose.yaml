@@ -1,5 +1,18 @@
 
 services:
+  adminback:
+    build: .
+    ports:
+      - "8001:8000"
+    environment:
+      - APP_ENV=dev
+      - DATABASE_URL=postgresql://app:!ChangeMe!@database:5432/app?serverVersion=16&charset=utf8
+    volumes:
+      - ./:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/var
+    depends_on:
+      - database
 ###> doctrine/doctrine-bundle ###
   database:
     image: postgres:${POSTGRES_VERSION:-16}-alpine
