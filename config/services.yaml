@@ -6,9 +6,15 @@
 parameters:
 
 services:
-    App\EventListener\ExceptionListener:
+    App\Service\:
+        resource: '../src/Service'
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    App\EventListener\AuthenticationSuccessListener:
         tags:
-            - { name: kernel.event_listener, event: kernel.exception }
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success }
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\admin;
 
 
-    use App\Entity\Category;
-    use App\Repository\CategoryRepository;
+    use App\Entity\Admin\Category;
+    use App\Repository\Admin\CategoryRepository;
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\JsonResponse;

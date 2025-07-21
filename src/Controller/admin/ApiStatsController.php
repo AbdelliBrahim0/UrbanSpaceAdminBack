@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\admin;
 
-use App\Repository\UserRepository;
-use App\Repository\ProductRepository;
-use App\Repository\CategoryRepository;
+use App\Repository\Admin\CategoryRepository;
+use App\Repository\Admin\ProductRepository;
+use App\Repository\Admin\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;

@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\admin;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Attribute\Route;
-use App\Entity\Product;
-use App\Entity\Category;
-use App\Repository\ProductRepository;
-use App\Repository\CategoryRepository;
+use App\Entity\Admin\Product;
+use App\Repository\Admin\CategoryRepository;
+use App\Repository\Admin\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -30,11 +28,22 @@ class ProductController extends AbstractController
         $page = $request->query->getInt('page', 1);
         $limit = $request->query->getInt('limit', 12);
         $search = $request->query->get('search', '');
+        $categoryId = $request->query->get('category');
 
         $qb = $productRepository->createQueryBuilder('p');
         if ($search) {
             $qb->andWhere('p.nom LIKE :search OR p.description LIKE :search')
                 ->setParameter('search', "%$search%");
+        }
+        $categoryTitle = null;
+        if ($categoryId) {
+            $qb->andWhere('p.categorie = :categoryId')
+                ->setParameter('categoryId', $categoryId);
+            // Récupérer le nom de la catégorie
+            $category = $this->entityManager->getRepository('App\\Entity\\Admin\\Category')->find($categoryId);
+            if ($category) {
+                $categoryTitle = $category->getNom();
+            }
         }
         $qb->setFirstResult(($page - 1) * $limit)
             ->setMaxResults($limit);
@@ -50,6 +59,9 @@ class ProductController extends AbstractController
                 'totalPages' => ceil($total / $limit)
             ]
         ];
+        if ($categoryTitle) {
+            $data['categoryTitle'] = $categoryTitle;
+        }
         return $this->json($data, Response::HTTP_OK, [], ['groups' => 'product:list']);
     }
 
